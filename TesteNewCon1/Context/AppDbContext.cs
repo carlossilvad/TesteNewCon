@@ -10,8 +10,8 @@ namespace TesteNewCon1.Context
     public class AppDbContext : DbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options): base(options)
-        {   
-
+        {
+            var teste = 1;
 
         }
 
