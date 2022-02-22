@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TesteNewCon1.Context;
+using TesteNewCon1.Services;
 
 namespace TesteNewCon1
 {
@@ -31,6 +32,8 @@ namespace TesteNewCon1
 
             services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddScoped<IPontoTuristico, PontosTuristicosService>();
 
 
             services.AddControllers();

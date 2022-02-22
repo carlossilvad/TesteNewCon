@@ -18,7 +18,7 @@ namespace TesteNewCon1.Model
             public string Nome { get; set; }
 
             [Required(ErrorMessage = "A descrição é obrigatória")]
-            [StringLength(100)]
+            [StringLength(500)]
             public string Descricao { get; set; }
 
             [Required(ErrorMessage = "A localização é obrigatória")]

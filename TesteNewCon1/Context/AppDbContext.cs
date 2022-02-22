@@ -11,11 +11,26 @@ namespace TesteNewCon1.Context
     {
         public AppDbContext(DbContextOptions<AppDbContext> options): base(options)
         {
-            var teste = 1;
-
         }
 
         public DbSet<PontoTuristico> PontosTuristicos { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<PontoTuristico>().HasData(
+                new PontoTuristico
+                {
+                    Id = 1,
+                    Nome = "TESTE Cristo Redentor",
+                    Descricao = "Cristo Redentor é uma estátua art déco que retrata Jesus Cristo.",
+                    Localizacao = "Morro do Corcovado",
+                    Cidade = "Rio de Janeiro",
+                    Estado = "RJ",
+                }
+
+
+                );
+        }
 
     }
 }
