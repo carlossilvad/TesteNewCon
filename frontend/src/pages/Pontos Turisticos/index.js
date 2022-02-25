@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useCallback} from "react";
 import {Link, useHistory} from 'react-router-dom';
 import './styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -15,8 +15,12 @@ export default function PontosTuristicos(){
 
     const [searchInput,setSearchInput]  = useState('');
     const [filtro, setFiltro] = useState([]);
+    const [exibirDetalhes, setExibirDetalhes] = useState(0);
+    const [offset, setOffset] = useState(0);
 
     const[pontosTuristicos,setPontosTuristicos] = useState([]);
+
+    console.log(pontosTuristicos.length);
 
     const searchPontosTuristicos = (searchValue) => {
         setSearchInput(searchValue);
@@ -62,6 +66,10 @@ export default function PontosTuristicos(){
         }
       }
 
+    const handleExibirDetalhes = useCallback ((id) => {
+        setExibirDetalhes(exibirDetalhes ? 0 : id)
+    }, [setExibirDetalhes])
+
      return(
          <div className="pontoTuristico-container">
              <header>
@@ -82,8 +90,16 @@ export default function PontosTuristicos(){
                 {filtro.map(pontoTuristico=>(
                     <li key={pontoTuristico.id}>
                         {pontoTuristico.nome}<br /><br />
-                        {pontoTuristico.descricao}<br /><br />                
-                        <Link className="btn btn-secondary btn-sm" to="pontoTuristico">Ver Detalhes</Link>
+                        {pontoTuristico.localizacao}<br /><br /> 
+                        {pontoTuristico.id === exibirDetalhes && (
+                            pontoTuristico.descricao
+                        )} 
+                        {pontoTuristico.id === exibirDetalhes && (
+                            <button className="btn btn-secondary btn-sm" onClick={() => handleExibirDetalhes(0)}>Ocultar Detalhes</button>
+                        )}
+                        {pontoTuristico.id !== exibirDetalhes && (
+                            <button className="btn btn-secondary btn-sm" onClick={() => handleExibirDetalhes(pontoTuristico.id)}>Ver Detalhes</button>
+                        )}                      
                         <button type="button" onClick={()=> editPontoTuristico(pontoTuristico.id)}>
                             <FiEdit size="25" color="blue"/>
                         </button>
@@ -98,8 +114,16 @@ export default function PontosTuristicos(){
                 {pontosTuristicos.map(pontoTuristico=>(
                     <li key={pontoTuristico.id}>
                         {pontoTuristico.nome}<br /><br />
-                        {pontoTuristico.descricao}<br /><br />                
-                    <Link className="btn btn-secondary btn-sm" to="pontoTuristico">Ver Detalhes</Link>
+                        {pontoTuristico.localizacao}<br /><br />
+                        {pontoTuristico.id === exibirDetalhes && (
+                            pontoTuristico.descricao
+                        )} 
+                        {pontoTuristico.id === exibirDetalhes && (
+                            <button className="btn btn-secondary btn-sm" onClick={() => handleExibirDetalhes(0)}>Ocultar Detalhes</button>
+                        )}
+                        {pontoTuristico.id !== exibirDetalhes && (
+                            <button className="btn btn-secondary btn-sm" onClick={() => handleExibirDetalhes(pontoTuristico.id)}>Ver Detalhes</button>
+                        )}                
                     <button type="button" onClick={()=> editPontoTuristico(pontoTuristico.id)}>
                         <FiEdit size="25" color="blue"/>
                     </button>
@@ -110,6 +134,8 @@ export default function PontosTuristicos(){
                 ))}
             </ul>
             )}
+            <Pagination limit={5} setOffset={setOffset} offset={offset} total={pontosTuristicos.length} />
+                
          </div>
         
      )
