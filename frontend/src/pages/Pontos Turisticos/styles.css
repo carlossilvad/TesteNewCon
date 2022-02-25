@@ -1,0 +1,45 @@
+.pontoTuristico-container {
+    width: 100%;
+    max-width: 96%;
+    margin: 2%;
+}
+
+.pontoTuristico-container header {
+    display: flex;
+    align-items: center;
+}
+
+.pontoTuristico-container header img{
+    height: 100%;
+    margin-right: 1%;
+}
+
+.pontoTuristico-container header a{
+    margin-left: auto;
+    margin-top: 0;
+}
+
+.pontoTuristico-container ul {
+    display: grid;
+    padding: 0;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 1%;
+    list-style: none;
+}
+
+.pontoTuristico-container ul li{
+    background: rgb(224, 224, 224);
+    padding: 10px;
+    border-radius: 10px;
+    position: relative;
+}
+
+.pontoTuristico-container ul li button{
+    border: 0;
+    margin-left: 70%;
+    background: transparent;
+}
+
+.pontoTuristico-container ul li button + button{
+    margin-left: auto;
+}
