@@ -134,6 +134,7 @@ export default function PontosTuristicos(){
                 ))}
             </ul>
             )}
+            <br />
             <Pagination limit={5} setOffset={setOffset} offset={offset} total={pontosTuristicos.length} />
                 
          </div>

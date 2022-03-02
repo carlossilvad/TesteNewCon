@@ -1,21 +1,17 @@
+using backend.Context;
+using backend.Repositories;
+using backend.Repositories.Interface;
+using backend.Services;
+using backend.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using TesteNewCon1.Context;
-using TesteNewCon1.Services;
 
-namespace TesteNewCon1
+namespace backend
 {
     public class Startup
     {
@@ -26,41 +22,31 @@ namespace TesteNewCon1
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddScoped<IPontoTuristico, PontosTuristicosService>();
-
+            services.AddScoped<IPontoTuristicoRepository, PontoTuristicoRepository>();
+            services.AddScoped<IPontoTuristicoService, PontosTuristicosService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "TesteNewCon1", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "backend", Version = "v1" });
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().WithExposedHeaders("X-Total-Registros"));
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TesteNewCon1 v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "backend v1"));
             }
-
-            app.UseCors(options =>
-            {
-                options.WithOrigins("http://localhost:3000");
-                options.AllowAnyMethod();
-                options.AllowAnyHeader();
-            });
-
-            app.UseHttpsRedirection();
 
             app.UseRouting();
 
