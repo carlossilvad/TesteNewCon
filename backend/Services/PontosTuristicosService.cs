@@ -1,83 +1,71 @@
-﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using TesteNewCon1.Context;
-using TesteNewCon1.Model;
+using backend.Models;
+using backend.Repositories.Interface;
+using backend.Services.Interfaces;
+using backend.Services.Pagination;
 
-namespace TesteNewCon1.Services
+namespace backend.Services
 {
-    public class PontosTuristicosService : IPontoTuristico
+    public class PontosTuristicosService : IPontoTuristicoService
     {
-        private readonly AppDbContext _context;
+        private readonly IPontoTuristicoRepository _pontoTuristicoRepository;
 
-        public PontosTuristicosService(AppDbContext context)
+        public PontosTuristicosService(IPontoTuristicoRepository pontoTuristicoRepository)
         {
-            _context = context;
+            _pontoTuristicoRepository = pontoTuristicoRepository;
         }
 
-        public async Task<IEnumerable<PontoTuristico>> GetPontosTuristicos()
+        public PagedList<PontoTuristico> ObterPontosTuristicos(PontoTuristicoParameters pontosTuristicosParameters)
         {
-            try
-            {
-                return await _context.PontosTuristicos.ToListAsync();
-            }
-            catch
-            {
-                throw;
-            }
-
-        }
-        public async Task<IEnumerable<PontoTuristico>> GetPontosTuristicosByNome(string nome)
-        {
-            IEnumerable<PontoTuristico> pontosTuristicos;
-            if (!string.IsNullOrWhiteSpace(nome))
-            {
-                pontosTuristicos = await _context.PontosTuristicos.Where(n => n.Nome.Contains(nome)).ToListAsync();
-            }
-            else
-            {
-                pontosTuristicos = await GetPontosTuristicos();
-            }
-            return pontosTuristicos;
+            return _pontoTuristicoRepository.GetPontosTuristicos(pontosTuristicosParameters);
         }
 
-        public async Task<IEnumerable<PontoTuristico>> GetPontosTuristicosByLocalizacao(string localizacao)
+        public async Task<List<PontoTuristico>> ObterPontosTuristicosPorLocalizacao(string localizacao)
         {
-            IEnumerable<PontoTuristico> pontosTuristicos;
-            if (!string.IsNullOrWhiteSpace(localizacao))
-            {
-                pontosTuristicos = await _context.PontosTuristicos.Where(n => n.Localizacao.Contains(localizacao)).ToListAsync();
-            }
-            else
-            {
-                pontosTuristicos = await GetPontosTuristicos();
-            }
-            return pontosTuristicos;
-        }
+            var pontoTuristico = await _pontoTuristicoRepository.GetPontosTuristicosPorNome(localizacao);
 
-        public async Task<PontoTuristico> GetPontoTuristico(int id)
-        {
-            var pontoTuristico = await _context.PontosTuristicos.FindAsync(id);
             return pontoTuristico;
         }
 
-        public async Task CreatePontoTuristico(PontoTuristico pontoTuristico)
+        public async Task<List<PontoTuristico>> ObterPontosTuristicosPorNome(string nome)
         {
-            _context.PontosTuristicos.Add(pontoTuristico);
-            await _context.SaveChangesAsync();
-        }
-        public async Task UpdatePontoTuristico(PontoTuristico pontoTuristico)
-        {
-            _context.Entry(pontoTuristico).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            var pontoTuristico = await _pontoTuristicoRepository.GetPontosTuristicosPorNome(nome);
+
+            return pontoTuristico;
         }
 
-        public async Task DeletePontoTuristico(PontoTuristico pontoTuristico)
+        public async Task<PontoTuristico> ObterPontoTuristicoPorId(int id)
         {
-            _context.PontosTuristicos.Remove(pontoTuristico);
-            await _context.SaveChangesAsync();
+            var pontoTuristico = await _pontoTuristicoRepository.ObterPorId(id);
+
+            return pontoTuristico;
         }
+
+        public async Task<PontoTuristico> CriarPontoTuristico(PontoTuristico pontoTuristico)
+        {
+            var pontoTuristicoNovo = await _pontoTuristicoRepository.Criar(pontoTuristico);
+
+            return pontoTuristicoNovo;
+        }
+        
+        public async Task<PontoTuristico> AtualizarPontoTuristico(int id, PontoTuristico pontoTuristico)
+        {
+            var ponto = await _pontoTuristicoRepository.ObterPorId(id);
+
+            if(ponto.Equals(null))
+            throw new Exception("Não existe ponto turistico com o id informado.");
+
+            var pontoAtualizado = await _pontoTuristicoRepository.Atualizar(pontoTuristico);
+
+            return pontoAtualizado;
+        }
+
+        public async Task DeletarPontoTuristico(int id)
+        {
+            await _pontoTuristicoRepository.Deletar(id);
+        }
+
     }
 }

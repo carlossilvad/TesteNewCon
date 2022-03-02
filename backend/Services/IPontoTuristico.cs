@@ -15,6 +15,8 @@ namespace TesteNewCon1.Services
         Task CreatePontoTuristico(PontoTuristico pontoTuristico);
         Task UpdatePontoTuristico(PontoTuristico pontoTuristico);
         Task DeletePontoTuristico(PontoTuristico pontoTuristico);
+        List<PontoTuristico> LocalizaPagina<Tipo>(int pagina, int tamanhoPagina) where Tipo : class;
+        int GetTotalRegistros();
 
     }
 }

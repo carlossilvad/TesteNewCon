@@ -1,134 +1,96 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Linq;
+using backend.Models;
+using backend.Services.Interfaces;
+using backend.Services.Pagination;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
-using TesteNewCon1.Model;
-using TesteNewCon1.Services;
 
-namespace TesteNewCon1.Controllers
+namespace backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class PontosTuristicosController : ControllerBase
     {
-        private IPontoTuristico _pontoTuristicoService;
+        private IPontoTuristicoService _pontoTuristicoService;
 
-        public PontosTuristicosController(IPontoTuristico pontoTuristicoService)
+        public PontosTuristicosController(IPontoTuristicoService pontoTuristicoService)
         {
             _pontoTuristicoService = pontoTuristicoService;
         }
 
+        #region Listar todos os produtos com paginação
         [HttpGet]
-
-        public async Task<ActionResult<IAsyncEnumerable<PontoTuristico>>> GetPontosTuristicos()
+        public ActionResult<IAsyncEnumerable<PontoTuristico>> GetPontosTuristicos([FromQuery] PontoTuristicoParameters pontoTuristicoParameters)
         {
-            try
+
+            var pontosTuristicos = _pontoTuristicoService.ObterPontosTuristicos(pontoTuristicoParameters);
+
+            var metadata = new
             {
-                var pontosTuristicos = await _pontoTuristicoService.GetPontosTuristicos();
-                return Ok(pontosTuristicos);
-            }
-            catch
+                pontosTuristicos.TotalCount,
+                pontosTuristicos.PageSize,
+                pontosTuristicos.CurrentPage,
+                pontosTuristicos.TotalPage,
+                pontosTuristicos.HasNext,
+                pontosTuristicos.HasPrevious
+            };
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+
+            Response.Headers["X-Total-Registros"] = pontosTuristicos.TotalCount.ToString();
+            Response.Headers["X-Numero-Pagina"] = pontosTuristicos.TotalPage.ToString();
+
+            return Ok(pontosTuristicos);
+        }
+        #endregion
+
+        #region Buscar produto por id
+        [HttpGet("{id}", Name = "ObterProduto")]
+        public async Task<ActionResult<PontoTuristico>> Get(int id)
+        {
+            var pontoTuristico = await _pontoTuristicoService.ObterPontoTuristicoPorId(id);
+
+            if (pontoTuristico == null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Erro ao obter pontos turísticos");
+                return NotFound();
             }
+
+            return Ok(pontoTuristico);
         }
 
-        [HttpGet("PontosTuristicosPorNome")]
-        public async Task<ActionResult<IAsyncEnumerable<PontoTuristico>>> GetPontosTuristicosByName([FromQuery] string nome)
-        {
-            try
-            {
-                var pontosTuristicos = await _pontoTuristicoService.GetPontosTuristicosByNome(nome);
+        #endregion
 
-                if (pontosTuristicos == null)
-                    return NotFound($"Não existem pontos turísticos com o nome {nome}");
-
-                return Ok(pontosTuristicos);
-            }
-            catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Erro ao obter pontos turísticos");
-            }
-        }
-
-        [HttpGet("{id:int}", Name="GetPontoTuristico")]
-        public async Task<ActionResult<PontoTuristico>> GetPontoTuristico(int id)
-        {
-            try
-            {
-                var pontoTuristico = await _pontoTuristicoService.GetPontoTuristico(id);
-
-                if (pontoTuristico == null)
-                    return NotFound($"Não existe um ponto turístico com id {id}");
-
-                return Ok(pontoTuristico);
-            }
-            catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Erro ao obter pontos turísticos");
-            }
-        }
-
+        #region Criar produto
         [HttpPost]
-        public async Task<ActionResult> Create(PontoTuristico pontoTuristico)
+        public async Task<ActionResult<PontoTuristico>> Post([FromBody] PontoTuristico pontoTuristico)
         {
-            try
-            {
-                await _pontoTuristicoService.CreatePontoTuristico(pontoTuristico);
-                return CreatedAtRoute(nameof(GetPontoTuristico), new { id = pontoTuristico.Id }, pontoTuristico);
-            }
-            catch
-            {
-                return BadRequest("Request Inválido");
-            }
+            var pontoTuristicoCriado = await _pontoTuristicoService.CriarPontoTuristico(pontoTuristico);
+
+            return Ok(pontoTuristicoCriado);
+        }
+        #endregion
+
+        #region Atualizar produto
+        [HttpPut("{id}")]
+        public async Task<ActionResult<PontoTuristico>> Put(int id, [FromBody] PontoTuristico pontoTuristico)
+        {
+            var pontoTuristicoAtualizado = await _pontoTuristicoService.AtualizarPontoTuristico(id, pontoTuristico);
+
+            return Ok(pontoTuristicoAtualizado);
         }
 
-        [HttpPut("{id:int}")]
-        public async Task<ActionResult> Edit(int id, [FromBody] PontoTuristico pontoTuristico)
-        {
-            try
-            {
-                if (pontoTuristico.Id == id)
-                {
-                    await _pontoTuristicoService.UpdatePontoTuristico(pontoTuristico);
-                    return Ok($"Ponto Turístico de id {id} atualizado com sucesso");
-                }
-                else
-                {
-                    return BadRequest("Dados incosistentes");
-                }
-            }
-            catch
-            {
-                return BadRequest("Request Inválido");
-            }
-        }
+        #endregion
 
-        [HttpDelete("{id:int}")]
+        #region Deletar produto
+        [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            try
-            {
-                var pontoTuristico = await _pontoTuristicoService.GetPontoTuristico(id);
-                if(pontoTuristico != null)
-                {
-                    await _pontoTuristicoService.DeletePontoTuristico(pontoTuristico);
-                    return Ok($"Ponto Turístico de id {id} excluído com sucesso");
-                }
-                else
-                {
-                    return NotFound($"Ponto turístico de id {id} não encontrado");
-                }
-            }
-            catch
-            {
-                return BadRequest("Request Inválido");
-            }
+            await _pontoTuristicoService.DeletarPontoTuristico(id);
+
+            return Ok();
         }
+        #endregion
+
     }
 }
