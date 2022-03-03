@@ -2,6 +2,7 @@
     width: 100%;
     max-width: 96%;
     margin: 2%;
+    color: black;
 }
 
 .pontoTuristico-container header {
@@ -36,10 +37,13 @@
 
 .pontoTuristico-container ul li button{
     border: 0;
-    margin-left: 70%;
-    background: transparent;
+    
 }
 
 .pontoTuristico-container ul li button + button{
     margin-left: auto;
+}
+
+.ee{
+    background: transparent;
 }

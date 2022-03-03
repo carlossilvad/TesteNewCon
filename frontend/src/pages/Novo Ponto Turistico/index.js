@@ -79,10 +79,10 @@ export default function NovoPontoTuristico(){
                 <form onSubmit={saveOrUpdate}>
                 <div class="form-group">
                 <label>Nome</label>
-                <input type="text" class="form-control"  placeholder="Nome do Ponto Turístico..."
+                <input type="text" class="form-control" placeholder="Nome do Ponto Turístico..."
                 value={nome}
                 onChange= {e=> setNome(e.target.value)}
-                />
+                required />
                 </div>
                 <br />
                 <div class="form-group">
@@ -90,15 +90,15 @@ export default function NovoPontoTuristico(){
                 <input type="text" class="form-control"  placeholder="Localização/Referência do Ponto Turístico..."
                 value={localizacao}
                 onChange= {e=> setLocalizacao(e.target.value)}
-                />
+                required />
                 </div>
                 <br />
                 <div class="row">
                     <div class="form-group col-4">
                     <label>Estado</label>
-                    <select id="inputState" class="form-control" value={estado}
+                    <select id="inputState" class="form-control" required value={estado}
                         onChange= {e=> setEstado(e.target.value)}>
-                        <option selected>Selecione...</option>
+                        <option value="">Selecione...</option>
                         <option>AC</option>
                         <option>AL</option>
                         <option>AP</option>
@@ -133,7 +133,7 @@ export default function NovoPontoTuristico(){
                     <input type="text" class="form-control"  placeholder="Cidade..."
                     value={cidade}
                     onChange= {e=> setCidade(e.target.value)}
-                    />
+                    required />
                     </div>
                 </div>
                 <br />

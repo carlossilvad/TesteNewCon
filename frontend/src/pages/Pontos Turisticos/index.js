@@ -89,48 +89,48 @@ export default function PontosTuristicos(){
                 <ul>
                 {filtro.map(pontoTuristico=>(
                     <li key={pontoTuristico.id}>
-                        {pontoTuristico.nome}<br /><br />
-                        {pontoTuristico.localizacao}<br /><br /> 
-                        {pontoTuristico.id === exibirDetalhes && (
-                            pontoTuristico.descricao
-                        )} 
-                        {pontoTuristico.id === exibirDetalhes && (
-                            <button className="btn btn-secondary btn-sm" onClick={() => handleExibirDetalhes(0)}>Ocultar Detalhes</button>
-                        )}
-                        {pontoTuristico.id !== exibirDetalhes && (
-                            <button className="btn btn-secondary btn-sm" onClick={() => handleExibirDetalhes(pontoTuristico.id)}>Ver Detalhes</button>
-                        )}                      
-                        <button type="button" onClick={()=> editPontoTuristico(pontoTuristico.id)}>
-                            <FiEdit size="25" color="blue"/>
-                        </button>
-                        <button type="button" onClick={() => deletePontoTuristico(pontoTuristico.id)}>
-                            <AiOutlineDelete size="25" color="red"/>
-                        </button>
-                        </li>
+                    <b>Nome: </b>{pontoTuristico.nome}<br /><br />
+                    <b>Localização/Referência: </b>{pontoTuristico.localizacao}<br /><br />
+                    {pontoTuristico.id === exibirDetalhes && (
+                        pontoTuristico.descricao
+                    )} <br />
+                    {pontoTuristico.id === exibirDetalhes && (
+                        <button className="btn btn-secondary btn-sm" onClick={() => handleExibirDetalhes(0)}>Ocultar Detalhes</button>
+                    )}
+                    {pontoTuristico.id !== exibirDetalhes && (
+                        <button className="btn btn-secondary btn-sm" onClick={() => handleExibirDetalhes(pontoTuristico.id)}>Ver Detalhes</button>
+                    )}                
+                <button type="button" className="ee" onClick={()=> editPontoTuristico(pontoTuristico.id)}>
+                    <FiEdit size="25" color="blue"/>
+                </button>
+                <button type="button" className="ee" onClick={() => deletePontoTuristico(pontoTuristico.id)}>
+                    <AiOutlineDelete size="25" color="red"/>
+                </button>
+                </li>
                     ))}
                 </ul>
             ) : (
             <ul>
                 {pontosTuristicos.map(pontoTuristico=>(
                     <li key={pontoTuristico.id}>
-                        {pontoTuristico.nome}<br /><br />
-                        {pontoTuristico.localizacao}<br /><br />
-                        {pontoTuristico.id === exibirDetalhes && (
-                            pontoTuristico.descricao
-                        )} 
-                        {pontoTuristico.id === exibirDetalhes && (
-                            <button className="btn btn-secondary btn-sm" onClick={() => handleExibirDetalhes(0)}>Ocultar Detalhes</button>
-                        )}
-                        {pontoTuristico.id !== exibirDetalhes && (
-                            <button className="btn btn-secondary btn-sm" onClick={() => handleExibirDetalhes(pontoTuristico.id)}>Ver Detalhes</button>
-                        )}                
-                    <button type="button" onClick={()=> editPontoTuristico(pontoTuristico.id)}>
-                        <FiEdit size="25" color="blue"/>
-                    </button>
-                    <button type="button" onClick={() => deletePontoTuristico(pontoTuristico.id)}>
-                        <AiOutlineDelete size="25" color="red"/>
-                    </button>
-                    </li>
+                    <b>Nome: </b>{pontoTuristico.nome}<br /><br />
+                    <b>Localização/Referência: </b>{pontoTuristico.localizacao}<br /><br />
+                    {pontoTuristico.id === exibirDetalhes && (
+                        pontoTuristico.descricao
+                    )} <br />
+                    {pontoTuristico.id === exibirDetalhes && (
+                        <button className="btn btn-secondary btn-sm" onClick={() => handleExibirDetalhes(0)}>Ocultar Detalhes</button>
+                    )}
+                    {pontoTuristico.id !== exibirDetalhes && (
+                        <button className="btn btn-secondary btn-sm" onClick={() => handleExibirDetalhes(pontoTuristico.id)}>Ver Detalhes</button>
+                    )}                
+                <button type="button" className="ee" onClick={()=> editPontoTuristico(pontoTuristico.id)}>
+                    <FiEdit size="25" color="blue"/>
+                </button>
+                <button type="button" className="ee" onClick={() => deletePontoTuristico(pontoTuristico.id)}>
+                    <AiOutlineDelete size="25" color="red"/>
+                </button>
+                </li>
                 ))}
             </ul>
             )}
